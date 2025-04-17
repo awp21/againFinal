@@ -1,0 +1,47 @@
+.my_special_text{
+    text-decoration: underline;
+}
+
+.my_background_color{
+    background-color: rgb(5,79,135) !important;
+}
+
+body {
+    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .resume {
+    max-width: 1100px;
+    margin: 50px auto;
+    background: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  .left-col {
+    background-color: #2f343a;
+    color: white;
+    padding: 30px;
+  }
+  .left-col .profile-pic {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid white;
+    margin: 0 auto 20px;
+    display: block;
+  }
+  .section-title {
+    font-weight: bold;
+    margin-top: 30px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 5px;
+  }
+  .contact-info i {
+    margin-right: 10px;
+  }
+  .right-col {
+    padding: 30px;
+  }
+  .work-entry {
+    margin-bottom: 20px;
+  }

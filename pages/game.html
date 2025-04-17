@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Memory Matching Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #222;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      padding-top: 30px;
+    }
+
+    a.back-link {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      color: #0c8;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    a.back-link:hover {
+      color: #0a6;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    #game {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      grid-gap: 15px;
+    }
+
+    .card {
+      width: 80px;
+      height: 80px;
+      background: #555;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
+    }
+
+    .card.revealed {
+      background: #0c8;
+      cursor: default;
+    }
+
+    .card.matched {
+      background: #4caf50;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      border: none;
+      background: #0c8;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0a6;
+    }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="scratchGundyr.html">← Back to scratchGundyr</a>
+  <h1>Memory Match Game</h1>
+  <div id="game"></div>
+  <div id="message"></div>
+  <button onclick="startGame()">Restart</button>
+
+  <script>
+    const emojis = ['🍄', '🌟', '👻', '🎁', '🔥', '🍌', '🐢', '💣'];
+    let board = [];
+    let firstCard = null;
+    let lockBoard = false;
+    let matchedCount = 0;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function createBoard() {
+      const game = document.getElementById('game');
+      game.innerHTML = '';
+      board = [...emojis, ...emojis];
+      shuffle(board);
+      matchedCount = 0;
+
+      board.forEach((emoji, index) => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.emoji = emoji;
+        card.dataset.index = index;
+        card.addEventListener('click', handleCardClick);
+        game.appendChild(card);
+      });
+
+      document.getElementById('message').textContent = '';
+    }
+
+    function handleCardClick(e) {
+      if (lockBoard) return;
+
+      const card = e.currentTarget;
+      const emoji = card.dataset.emoji;
+
+      if (card.classList.contains('revealed') || card.classList.contains('matched')) return;
+
+      card.textContent = emoji;
+      card.classList.add('revealed');
+
+      if (!firstCard) {
+        firstCard = card;
+        return;
+      }
+
+      if (firstCard.dataset.index === card.dataset.index) return; // same card
+
+      if (firstCard.dataset.emoji === emoji) {
+        // Match
+        firstCard.classList.add('matched');
+        card.classList.add('matched');
+        matchedCount++;
+        if (matchedCount === emojis.length) {
+          document.getElementById('message').textContent = "You win! 🎉";
+        }
+        firstCard = null;
+      } else {
+        // Not a match
+        lockBoard = true;
+        setTimeout(() => {
+          firstCard.textContent = '';
+          card.textContent = '';
+          firstCard.classList.remove('revealed');
+          card.classList.remove('revealed');
+          firstCard = null;
+          lockBoard = false;
+        }, 1000);
+      }
+    }
+
+    function startGame() {
+      firstCard = null;
+      lockBoard = false;
+      createBoard();
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
